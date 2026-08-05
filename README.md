@@ -56,3 +56,10 @@ rebuilt into tracked patch files.
 
 Read [AGENTS.md](AGENTS.md) before contributing. It defines the patch workflow,
 Git boundaries, Scissors/Folia/Paper naming boundary, and required verification.
+
+## License
+
+Scissors Folia is distributed under the GNU General Public License version 3
+only. Individual authors may additionally offer their own contributions under
+the MIT License. See [LICENSING.md](LICENSING.md) for the scope of those grants and
+the upstream licensing notices.
