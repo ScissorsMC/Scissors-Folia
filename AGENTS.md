@@ -1,4 +1,4 @@
-# Scissors Agent Guide
+# Scissors Folia Agent Guide
 
 ## Scope
 
@@ -277,7 +277,7 @@ After verification:
 ## Safety
 
 - Do not discard, reset, or overwrite unrelated work in the root or nested Git repositories.
-- Do not update Paper, Gradle, paperweight, Java, mappings, or dependencies unless requested.
+- Do not update Folia, Paper, Gradle, paperweight, Java, mappings, or dependencies unless requested.
 - Do not publish artifacts, push branches, create releases, or modify external services unless requested.
 - Do not run a Minecraft server as verification. Hand the run command to the user when interactive runtime testing is
   required.

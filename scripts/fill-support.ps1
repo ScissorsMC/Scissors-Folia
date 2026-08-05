@@ -46,7 +46,7 @@ function Cfg([string]$key, $default) {
 }
 
 $ApiUrl        = (Cfg 'ApiUrl' 'https://fill.scissors.gg').ToString().TrimEnd('/')
-$ProjectKey    = Cfg 'ProjectKey' 'scissors'
+$ProjectKey    = Cfg 'ProjectKey' 'scissors-folia'
 $AdminUser     = Cfg 'AdminUser' 'admin'
 $AdminPassword = Cfg 'AdminPassword' ''
 if (-not $AdminPassword) { Fail "AdminPassword is not set in $ConfigPath." }

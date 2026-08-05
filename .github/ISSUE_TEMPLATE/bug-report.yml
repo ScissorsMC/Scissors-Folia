@@ -15,7 +15,7 @@ body:
   - type: textarea
     id: scissors-version
     attributes:
-      label: Scissors version
+      label: Scissors Folia version
       description: >
         Paste the full output of the `/version` command from your server. It includes
         everything needed to identify your build: the Minecraft version, the Scissors
@@ -39,7 +39,7 @@ body:
       description: >
         The unmodified Folia build you confirmed the bug does NOT occur on. Must be the
         same Minecraft version. `/version` on Scissors shows which Folia build your
-        Scissors build is based on — test against that one.
+        Scissors Folia build is based on — test against that one.
       placeholder: "e.g. Folia build 12 (Minecraft 26.2)"
     validations:
       required: true
@@ -66,7 +66,7 @@ body:
     id: reproduction
     attributes:
       label: Steps to reproduce
-      description: Exact steps a maintainer can follow to see the bug on Scissors.
+      description: Exact steps a maintainer can follow to see the bug on Scissors Folia.
       placeholder: |
         1. ...
         2. ...
@@ -74,11 +74,11 @@ body:
     validations:
       required: true
   - type: textarea
-    id: paper-evidence
+    id: folia-evidence
     attributes:
       label: Evidence it does NOT happen on unmodified Folia
       description: >
-        Irrefutable proof this is Scissors-specific. Run the exact same steps on an
+        Irrefutable proof this is Scissors Folia-specific. Run the exact same steps on an
         unmodified Folia server of the same Minecraft version and show the different
         result. Provide concrete evidence: a video or screenshots of both runs
         side by side, console logs from both servers, or a clear step-by-step
@@ -93,8 +93,8 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: Logs / stack trace (Scissors)
-      description: Relevant server console output or stack trace from Scissors. Automatically formatted, no backticks needed.
+      label: Logs / stack trace (Scissors Folia)
+      description: Relevant server console output or stack trace from Scissors Folia. Automatically formatted, no backticks needed.
       render: text
     validations:
       required: false
@@ -112,9 +112,9 @@ body:
       options:
         - label: I searched existing issues and this bug has not already been reported.
           required: true
-        - label: I am running the latest Scissors build (`/version` says "You are running the latest version", or I updated and the bug still occurs).
+        - label: I am running the latest Scissors Folia build (`/version` says "You are running the latest version", or I updated and the bug still occurs).
           required: true
-        - label: I tested the same Minecraft version on both Scissors and unmodified Folia.
+        - label: I tested the same Minecraft version on both Scissors Folia and unmodified Folia.
           required: true
         - label: I confirmed the bug does NOT occur on unmodified Folia, and provided evidence above.
           required: true

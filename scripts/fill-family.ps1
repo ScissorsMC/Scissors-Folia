@@ -11,7 +11,7 @@
 
     Idempotent: creates the family if missing, otherwise updates it, with the
     given minimum Java version and recommended JVM flags (defaults to Aikar's
-    flags, same as Paper serves).
+    flags, matching the upstream Fill metadata).
 
 .EXAMPLE
     ./scripts/fill-family.ps1 -Family 26.3
@@ -74,7 +74,7 @@ function Cfg([string]$key, $default) {
 }
 
 $ApiUrl        = (Cfg 'ApiUrl' 'https://fill.scissors.gg').ToString().TrimEnd('/')
-$ProjectKey    = Cfg 'ProjectKey' 'scissors'
+$ProjectKey    = Cfg 'ProjectKey' 'scissors-folia'
 $AdminUser     = Cfg 'AdminUser' 'admin'
 $AdminPassword = Cfg 'AdminPassword' ''
 if (-not $AdminPassword) { Fail "AdminPassword is not set in $ConfigPath." }

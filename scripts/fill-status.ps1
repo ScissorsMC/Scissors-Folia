@@ -1,13 +1,13 @@
 #requires -Version 7
 <#
 .SYNOPSIS
-    Show the state of the Scissors Fill instance: families, versions, support
+    Show the state of the Scissors Folia Fill project: families, versions, support
     status, Java metadata, and the latest build per version.
 
 .DESCRIPTION
     Read-only; talks to the public Fill API over HTTPS (no SSH needed).
     Reads ApiUrl/ProjectKey from scripts/fill.config.psd1 if present, otherwise
-    uses the defaults for the Scissors instance.
+    uses the defaults for the Scissors Folia project.
 
 .EXAMPLE
     ./scripts/fill-status.ps1
@@ -39,7 +39,7 @@ function Cfg([string]$key, $default) {
 }
 
 $ApiUrl  = (Cfg 'ApiUrl' 'https://fill.scissors.gg').ToString().TrimEnd('/')
-$Project = Cfg 'ProjectKey' 'scissors'
+$Project = Cfg 'ProjectKey' 'scissors-folia'
 
 try {
     $info = Invoke-RestMethod "$ApiUrl/v3/projects/$Project"

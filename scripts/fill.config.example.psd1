@@ -5,7 +5,7 @@
     ApiUrl = 'https://fill.scissors.gg'
 
     # Fill project key.
-    ProjectKey = 'scissors'
+    ProjectKey = 'scissors-folia'
 
     # Fill admin credentials (a user with the API_MANAGE role in application.yaml).
     # Used by fill-family.ps1 and fill-support.ps1 for the GraphQL management API.

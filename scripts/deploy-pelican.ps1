@@ -1,7 +1,7 @@
 #requires -Version 7
 <#
 .SYNOPSIS
-    Deploy a freshly built Scissors paperclip jar to a Pelican-managed server:
+    Deploy a freshly built Scissors Folia paperclip jar to a Pelican-managed server:
     stop the server, upload the jar, and start it again.
 
 .DESCRIPTION
