@@ -1,17 +1,17 @@
 name: Bug report
-description: Report a bug in Scissors that does NOT occur on unmodified Paper.
+description: Report a bug in Scissors Folia that does NOT occur on unmodified Folia.
 title: "[Bug]: "
 labels: ["bug", "needs-triage"]
 body:
   - type: markdown
     attributes:
       value: |
-        Scissors is a fork of Paper. A bug that also happens on an unmodified Paper
-        server of the same version is an **upstream Paper bug**, not a Scissors bug —
-        report those to [PaperMC](https://github.com/PaperMC/Paper/issues) instead.
+        Scissors Folia is a fork of Folia. A bug that also happens on an unmodified
+        Folia server of the same version is an **upstream Folia bug**, not a Scissors
+        bug — report those to [PaperMC](https://github.com/PaperMC/Folia/issues) instead.
 
         This form is only for bugs introduced by Scissors. You must show the bug
-        reproduces on Scissors **and does not** reproduce on unmodified Paper.
+        reproduces on Scissors Folia **and does not** reproduce on unmodified Folia.
   - type: textarea
     id: scissors-version
     attributes:
@@ -20,11 +20,11 @@ body:
         Paste the full output of the `/version` command from your server. It includes
         everything needed to identify your build: the Minecraft version, the Scissors
         build number, commit and build date, the API and previous versions, whether you
-        are behind the latest build, and the upstream Paper build Scissors is based on.
+        are behind the latest build, and the upstream Folia build Scissors is based on.
         Automatically formatted, no backticks needed.
       render: text
       placeholder: |
-        Version: 26.2-16-378bd23, based on Paper build 87
+        Version: 26.2-16-378bd23, based on Folia build 12
         Built: 2026-07-29 19:50 UTC
         API: 26.2.build.16-stable
         Status: You are running the latest version
@@ -33,14 +33,14 @@ body:
     validations:
       required: true
   - type: input
-    id: paper-version
+    id: folia-version
     attributes:
-      label: Paper build tested against
+      label: Folia build tested against
       description: >
-        The unmodified Paper build you confirmed the bug does NOT occur on. Must be the
-        same Minecraft version. `/version` on Scissors shows which Paper build your
+        The unmodified Folia build you confirmed the bug does NOT occur on. Must be the
+        same Minecraft version. `/version` on Scissors shows which Folia build your
         Scissors build is based on — test against that one.
-      placeholder: "e.g. Paper build 62 (Minecraft 26.2)"
+      placeholder: "e.g. Folia build 12 (Minecraft 26.2)"
     validations:
       required: true
   - type: textarea
@@ -76,18 +76,18 @@ body:
   - type: textarea
     id: paper-evidence
     attributes:
-      label: Evidence it does NOT happen on unmodified Paper
+      label: Evidence it does NOT happen on unmodified Folia
       description: >
         Irrefutable proof this is Scissors-specific. Run the exact same steps on an
-        unmodified Paper server of the same Minecraft version and show the different
+        unmodified Folia server of the same Minecraft version and show the different
         result. Provide concrete evidence: a video or screenshots of both runs
         side by side, console logs from both servers, or a clear step-by-step
         comparison. "I think it's Scissors" is not enough — reports without this
         will be closed.
       placeholder: |
-        Paper build & version tested:
-        Same steps on Paper produced: ...
-        Attached: paper-run.mp4 / paper-console.log, scissors-run.mp4 / scissors-console.log
+        Folia build & version tested:
+        Same steps on Folia produced: ...
+        Attached: folia-run.mp4 / folia-console.log, scissors-run.mp4 / scissors-console.log
     validations:
       required: true
   - type: textarea
@@ -114,9 +114,9 @@ body:
           required: true
         - label: I am running the latest Scissors build (`/version` says "You are running the latest version", or I updated and the bug still occurs).
           required: true
-        - label: I tested the same Minecraft version on both Scissors and unmodified Paper.
+        - label: I tested the same Minecraft version on both Scissors and unmodified Folia.
           required: true
-        - label: I confirmed the bug does NOT occur on unmodified Paper, and provided evidence above.
+        - label: I confirmed the bug does NOT occur on unmodified Folia, and provided evidence above.
           required: true
         - label: This is a bug report, not a crash/exploit. Security findings go through the exploit finding form.
           required: true

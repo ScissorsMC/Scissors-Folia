@@ -2,8 +2,9 @@
 
 ## Scope
 
-These instructions apply to the entire repository. Scissors is a patch-based fork of Paper built with paperweight. The
-files produced by applying patches are development worktrees, not the repository's source of truth.
+These instructions apply to the entire repository. Scissors Folia is a patch-based fork of Folia built with
+paperweight. Paperweight applies Paper, then Folia, then Scissors. The files produced by applying patches are
+development worktrees, not the repository's source of truth.
 
 Read this file before changing code. Human setup and build instructions are in
 `README.md`.
@@ -51,49 +52,50 @@ Treat notes from other Minecraft versions as leads only and revalidate them agai
 
 Scissors owns:
 
-- The `scissors` root project and the `scissors-api` and `scissors-server`
+- The `scissors-folia` root project and the `scissors-api` and `scissors-server`
   modules.
 - The `io.github.scissorsmc` Maven group.
 - The `scissorsmc:scissors` runtime brand and the `Scissors` product name.
 - Scissors-specific patches, source files, tests, and documentation.
 
-Paper remains the upstream project. Keep `Paper`, `paper-api`, `paper-server`,
-`io.papermc`, Paper repositories, Paper APIs, and Minecraft names where they describe upstream code or compatibility. Do
-not perform blanket Paper-to-Scissors replacements. Preserve upstream copyright, license, and attribution text.
+Folia is the direct upstream and Paper remains Folia's upstream. Keep `Folia`, `Paper`, `paper-api`, `paper-server`,
+`dev.folia`, `io.papermc`, upstream repositories, APIs, and Minecraft names where they describe upstream code or
+compatibility. Do not perform blanket upstream-to-Scissors replacements. Preserve upstream copyright, license, and
+attribution text.
 
-The Paper commit is pinned by `paperRef` in `gradle.properties`. Do not change it unless the task is specifically an
-upstream update.
+The Folia commit is pinned by `foliaRef` in `gradle.properties`. That Folia commit determines the Paper commit beneath
+it. Do not change either relationship unless the task is specifically an upstream update.
 
-## Updating Paper
+## Updating Folia
 
-Treat a Paper update as a patch rebase, not a dependency bump.
+Treat a Folia update as a patch rebase, not a dependency bump.
 
 1. Confirm the root repository and every generated nested worktree are free of unrelated changes. Fold or commit all
    intended work before changing the upstream reference because patch application can replace generated worktrees.
-2. Set `paperRef` in `gradle.properties` to the full target Paper commit SHA.
-3. If the target commit changes Minecraft versions, also copy `mcVersion` and `apiVersion` from the target Paper
+2. Set `foliaRef` in `gradle.properties` to the full target Folia commit SHA.
+3. If the target commit changes Minecraft versions, also copy `mcVersion` and `apiVersion` from the target Folia
    `gradle.properties`. Do not guess either value.
-4. Compare the target Paper root build files, Gradle wrapper, Java/toolchain requirements, and paperweight configuration
+4. Compare the target Folia root build files, Gradle wrapper, Java/toolchain requirements, and paperweight configuration
    with this repository. Port only changes required to build the new target; retain Scissors project names, group,
    branding, repositories, and owned build behavior.
 5. Run `./gradlew applyAllPatches`. Resolve failures in patch-set order:
     - Rebase rejected single-file build-script changes in the generated `scissors-*/build.gradle.kts`, then run
-      `./gradlew rebuildPaperSingleFilePatches`.
+      `./gradlew rebuildFoliaSingleFilePatches`.
     - Resolve API conflicts in `paper-api/`, Paper-server conflicts in `paper-server/`, and Minecraft conflicts in
       `scissors-server/src/minecraft/`.
-    - Preserve the reason for each Scissors patch. Drop a patch when Paper now provides the same behavior; do not retain
-      an empty or redundant compatibility patch.
-    - Use `applyPaperSingleFilePatchesFuzzy` or `applyPaperApiFilePatchesFuzzy` only to recover changed context that is
+    - Preserve the reason for each Scissors patch. Drop a patch when Folia or Paper now provides the same behavior; do
+      not retain an empty or redundant compatibility patch.
+    - Use `applyFoliaSingleFilePatchesFuzzy` or `applyPaperApiFilePatchesFuzzy` only to recover changed context that is
       still semantically correct. For a Minecraft-version update,
       `applyOrMovePaperApiFilePatches` can move rejected API file patches aside for manual resolution.
 6. Regenerate the tracked patch sets with the full patch-regeneration sequence below. Review every regenerated patch;
-   an upstream update must not silently absorb unrelated Paper changes into a Scissors patch.
+   an upstream update must not silently absorb unrelated Folia or Paper changes into a Scissors patch.
 7. Run `./gradlew applyAllPatches` again from the regenerated tracked state, then run `./gradlew build`,
    `git diff --check`, and `git diff`.
 
 Use `.\gradlew.bat` for every Gradle command on Windows PowerShell. An update commit should contain the new
-`paperRef`, any required version or build-tooling changes, and all regenerated Scissors patches needed for that exact
-Paper commit.
+`foliaRef`, any required version or build-tooling changes, and all regenerated Scissors patches needed for that exact
+Folia commit.
 
 ## Repository model
 
@@ -155,7 +157,7 @@ Common task pairs are:
 
 | Layer        | Fix up file patches            | Rebuild patches             |
 |--------------|--------------------------------|-----------------------------|
-| API          | `fixupPaperApiFilePatches`     | `rebuildPaperPatches`       |
+| API          | `fixupPaperApiFilePatches`     | `rebuildFoliaPatches`       |
 | Paper server | `fixupPaperServerFilePatches`  | `rebuildPaperServerPatches` |
 | Minecraft    | `fixupMinecraftSourcePatches`  | `rebuildMinecraftPatches`   |
 
@@ -214,11 +216,10 @@ To amend an existing feature patch, rewrite its commit in the nested worktree:
 
 ### Full patch regeneration
 
-When a change crosses layers, or before final verification, use the same complete sequence established by Paper forks
-such as Folia:
+When a change crosses layers, or before final verification, use the complete downstream sequence:
 
 ```shell
-./gradlew rebuildPaperPatches
+./gradlew rebuildFoliaPatches
 ./gradlew rebuildPaperServerPatches
 ./gradlew rebuildServerPatches
 ./gradlew rebuildMinecraftPatches

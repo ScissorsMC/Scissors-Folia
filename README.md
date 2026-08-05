@@ -1,7 +1,13 @@
-# Scissors
+# Scissors Folia
 
-Scissors is a fork of [Paper](https://github.com/PaperMC/Paper) focused on
-patching exploits and security vulnerabilities that are unpatched upstream.
+Scissors Folia is the [Folia](https://github.com/PaperMC/Folia)-based edition
+of [Scissors](https://github.com/ScissorsMC/Scissors). It applies Scissors'
+exploit and security patches on top of Folia while retaining the Scissors
+product identity.
+
+Folia's regionized multithreading model has materially different plugin
+compatibility requirements from Paper. A plugin must explicitly support Folia
+and declare `folia-supported: true` before it can be loaded.
 
 ## Building
 
@@ -9,8 +15,8 @@ Building requires Git, an internet connection for initial setup, and Java 25.
 Gradle can provision the Java 25 toolchain when run with Java 21 or newer.
 
 ```shell
-git clone https://github.com/ScissorsMC/Scissors.git
-cd Scissors
+git clone https://github.com/ScissorsMC/Scissors-Folia.git
+cd Scissors-Folia
 ./gradlew applyAllPatches
 ./gradlew :scissors-server:createPaperclipJar
 ```
@@ -42,13 +48,11 @@ create the runnable Paperclip JAR.
 
 Scissors uses
 [paperweight](https://github.com/PaperMC/paperweight) to store changes as Git
-patches over a pinned Paper commit. Applied Paper and Minecraft worktrees are
-generated and ignored; edits to existing upstream code must be committed or
-folded into the appropriate nested patch repository, then rebuilt into tracked
-patch files.
+patches over a pinned Folia commit. Paperweight first applies Paper and Folia,
+then applies Scissors' API, Paper-server, and Minecraft patch layers. Generated
+Paper and Minecraft worktrees are ignored; edits to existing upstream code must
+be committed or folded into the appropriate nested patch repository, then
+rebuilt into tracked patch files.
 
 Read [AGENTS.md](AGENTS.md) before contributing. It defines the patch workflow,
-Git boundaries, Scissors/Paper naming boundary, and required verification. The
-layout is based on the
-[paperweight fork example](https://github.com/PaperMC/paperweight-examples/tree/v2-fork)
-and follows conventions used by [Folia](https://github.com/PaperMC/Folia).
+Git boundaries, Scissors/Folia/Paper naming boundary, and required verification.

@@ -9,7 +9,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-rootProject.name = "scissors"
+rootProject.name = "scissors-folia"
 
 for (name in listOf("scissors-api", "scissors-server")) {
     include(name)

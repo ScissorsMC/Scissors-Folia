@@ -174,7 +174,7 @@ index 4b6d7817847a3105c744723c85b1cf9955b3847e..73e9ee313b00dfaa0776cdf84605807d
          return new MapDecorations(Util.copyAndPut(this.decorations, id, entry));
      }
 diff --git a/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java b/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
-index f05ab5fdab4cb587974e2864e859e49375f8165e..9bd31436715f55f4af180ffac1585ddd03f80657 100644
+index e00caf8dc68ce49f4011f881f3558347fe848822..e95d796e2087f5716cf2ad7906a34432eee1a959 100644
 --- a/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
 +++ b/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
 @@ -3,6 +3,7 @@ package net.minecraft.world.level.saveddata.maps;
@@ -204,7 +204,7 @@ index f05ab5fdab4cb587974e2864e859e49375f8165e..9bd31436715f55f4af180ffac1585ddd
  
      // CraftBukkit start
      public final org.bukkit.craftbukkit.map.CraftMapView mapView;
-@@ -304,6 +308,22 @@ public class MapItemSavedData extends SavedData {
+@@ -305,6 +309,22 @@ public class MapItemSavedData extends SavedData {
          final double yRot,
          final @Nullable Component name
      ) {

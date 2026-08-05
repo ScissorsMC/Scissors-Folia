@@ -80,14 +80,14 @@
      private CompletableFuture<ComputedVersion> fetchVersionMessage() {
         return CompletableFuture.supplyAsync(() -> {
 +           // Scissors start - present version information as a compact project panel
-+           final @Nullable Component paperReference = PaperVersionFetcher.getPaperReferenceMessage();
++           final @Nullable Component foliaReference = PaperVersionFetcher.getFoliaReferenceMessage();
 +           final TextComponent.Builder versionLine = Component.text()
 +               .append(Component.text("Version: ", SCISSORS_ACCENT))
 +               .append(Component.text(BUILD_INFO.asString(VERSION_SIMPLE), NamedTextColor.WHITE));
-+           if (paperReference != null) {
++           if (foliaReference != null) {
 +               versionLine
 +                   .append(Component.text(", ", NamedTextColor.WHITE))
-+                   .append(paperReference);
++                   .append(foliaReference);
 +           }
 +
             final Component message = Component.textOfChildren(

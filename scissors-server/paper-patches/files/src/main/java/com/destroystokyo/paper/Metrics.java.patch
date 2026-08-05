@@ -4,7 +4,7 @@
              boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
--                Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger());
+-                Metrics metrics = new Metrics("Folia", serverUUID, logFailedRequests, Bukkit.getLogger()); // Folia - we have our own bstats page
 +                Metrics metrics = new Metrics("Scissors", serverUUID, logFailedRequests, Bukkit.getLogger()); // Scissors
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {

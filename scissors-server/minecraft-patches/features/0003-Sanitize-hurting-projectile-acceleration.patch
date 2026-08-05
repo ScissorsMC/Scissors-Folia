@@ -6,7 +6,7 @@ Subject: [PATCH] Sanitize hurting projectile acceleration
 Stored or runtime-mutated non-finite acceleration can poison projectile movement and client tracking. Validate the scalar at load and tick boundaries, bound finite values, and discard non-finite launch directions.
 
 diff --git a/net/minecraft/world/entity/projectile/hurtingprojectile/AbstractHurtingProjectile.java b/net/minecraft/world/entity/projectile/hurtingprojectile/AbstractHurtingProjectile.java
-index 84c07fb51e8321b32f8607a602dd1e417ce36af7..cec39dd1c63f2c43b669a9a52482fef1f2ce293c 100644
+index fd11a2f4c7d0e35fdeccac9145d00ae808095558..7cc7f5a2d2b1342e190a90638f02b217d3e61cf5 100644
 --- a/net/minecraft/world/entity/projectile/hurtingprojectile/AbstractHurtingProjectile.java
 +++ b/net/minecraft/world/entity/projectile/hurtingprojectile/AbstractHurtingProjectile.java
 @@ -1,9 +1,11 @@
@@ -45,7 +45,7 @@ index 84c07fb51e8321b32f8607a602dd1e417ce36af7..cec39dd1c63f2c43b669a9a52482fef1
          Entity owner = this.getOwner();
          this.applyInertia();
          if (this.level().isClientSide() || (owner == null || !owner.isRemoved()) && this.level().hasChunkAt(this.blockPosition())) {
-@@ -174,6 +182,7 @@ public abstract class AbstractHurtingProjectile extends Projectile {
+@@ -179,6 +187,7 @@ public abstract class AbstractHurtingProjectile extends Projectile {
      protected void readAdditionalSaveData(final ValueInput input) {
          super.readAdditionalSaveData(input);
          this.accelerationPower = input.getDoubleOr("acceleration_power", 0.1);
@@ -53,7 +53,7 @@ index 84c07fb51e8321b32f8607a602dd1e417ce36af7..cec39dd1c63f2c43b669a9a52482fef1
      }
  
      @Override
-@@ -182,10 +191,49 @@ public abstract class AbstractHurtingProjectile extends Projectile {
+@@ -187,10 +196,49 @@ public abstract class AbstractHurtingProjectile extends Projectile {
      }
  
      public void assignDirectionalMovement(final Vec3 direction, final double speed) {

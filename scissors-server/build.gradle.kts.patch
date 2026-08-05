@@ -1,68 +1,58 @@
---- a/paper-server/build.gradle.kts
-+++ b/paper-server/build.gradle.kts
-@@ -22,6 +_,17 @@
-     minecraftVersion = providers.gradleProperty("mcVersion")
+--- a/folia-server/build.gradle.kts
++++ b/folia-server/build.gradle.kts
+@@ -23,7 +_,9 @@
+     filterPatches = false
      gitFilePatches = false
  
+-    val fork = forks.register("folia") {
++    val folia = forks.register("folia") {
++        rootDirectory = upstreamsDirectory().map { it.dir("folia") }
++
+         upstream.patchDir("paperServer") {
+             upstreamPath = "paper-server"
+             excludes = setOf("src/minecraft", "patches", "build.gradle.kts")
+@@ -32,7 +_,17 @@
+         }
+     }
+ 
+-    activeFork = fork
 +    val scissors = forks.register("scissors") {
-+        upstream.patchDir("paperServer") {
-+            upstreamPath = "paper-server"
-+            excludes = setOf("src/minecraft", "patches", "build.gradle.kts")
++        forks = folia
++
++        upstream.patchRepo("paperServer") {
++            upstreamRepo = folia.patchedRepo("paperServer")
 +            patchesDir = rootDirectory.dir("scissors-server/paper-patches")
 +            outputDir = rootDirectory.dir("paper-server")
 +        }
 +    }
 +
 +    activeFork = scissors
-+
-     updatingMinecraft {
-         // oldPaperCommit = "d4fe85375af18bfa88f44d7c1e6a61904ae550cc"
-     }
-@@ -86,7 +_,20 @@
-     }
- }
  
--val log4jPlugins = sourceSets.create("log4jPlugins")
-+sourceSets {
-+    main {
-+        java { srcDir("../paper-server/src/main/java") }
-+        resources { srcDir("../paper-server/src/main/resources") }
-+    }
-+    test {
-+        java { srcDir("../paper-server/src/test/java") }
-+        resources { srcDir("../paper-server/src/test/resources") }
-+    }
-+}
-+
-+val log4jPlugins = sourceSets.create("log4jPlugins") {
-+    java { srcDir("../paper-server/src/log4jPlugins/java") }
-+}
- configurations.named(log4jPlugins.compileClasspathConfigurationName) {
-     extendsFrom(configurations.compileClasspath.get())
- }
-@@ -109,7 +_,7 @@
+ 
+     updatingMinecraft {
+@@ -134,7 +_,7 @@
  }
  
  dependencies {
--    implementation(project(":paper-api"))
+-    implementation(project(":folia-api"))
 +    implementation(project(":scissors-api"))
      implementation("ca.spottedleaf:leafpile:1.0.0")
      implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
      implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
-@@ -171,18 +_,19 @@
+@@ -196,18 +_,19 @@
          val gitBranch = git.exec(providers, "rev-parse", "--abbrev-ref", "HEAD").get().trim()
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
--            "Implementation-Title" to "Paper",
+-            "Implementation-Title" to "Folia",
 +            "Implementation-Title" to "Scissors",
              "Implementation-Version" to implementationVersion,
              "Implementation-Vendor" to date,
--            "Specification-Title" to "Paper",
+-            "Specification-Title" to "Folia",
 +            "Specification-Title" to "Scissors",
              "Specification-Version" to project.version,
 -            "Specification-Vendor" to "Paper Team",
--            "Brand-Id" to "papermc:paper",
--            "Brand-Name" to "Paper",
+-            "Brand-Id" to "papermc:folia",
+-            "Brand-Name" to "Folia",
 +            "Specification-Vendor" to "ScissorsMC Team",
 +            "Brand-Id" to "scissorsmc:scissors",
 +            "Brand-Name" to "Scissors",
@@ -70,11 +60,11 @@
              "Build-Time" to buildTime.toString(),
              "Git-Branch" to gitBranch,
              "Git-Commit" to gitHash,
-+            "Paper-Ref" to rootProject.providers.gradleProperty("paperRef").get(), // Scissors
++            "Folia-Ref" to rootProject.providers.gradleProperty("foliaRef").get(), // Scissors-Folia
          )
          for (tld in setOf("net", "com", "org")) {
              attributes("$tld/bukkit", "Sealed" to true)
-@@ -246,7 +_,7 @@
+@@ -271,7 +_,7 @@
      jvmArgumentProviders.add(provider)
  }
  
@@ -83,12 +73,12 @@
  idea {
      module {
          generatedSourceDirs.add(generatedDir.toFile())
-@@ -326,7 +_,7 @@
+@@ -352,7 +_,7 @@
  }
  
  fill {
--    project("paper")
-+    project("scissors")
+-    project("folia")
++    project("scissors-folia")
      versionFamily(paperweight.minecraftVersion.map { it.split(".", "-").takeWhile { part -> part.toIntOrNull() != null }.take(2).joinToString(".") })
      version(paperweight.minecraftVersion)
  

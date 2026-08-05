@@ -12,13 +12,13 @@
      private static final ComponentLogger COMPONENT_LOGGER = ComponentLogger.logger(LogManager.getRootLogger().getName());
      private static final int DISTANCE_ERROR = -1;
      private static final int DISTANCE_UNKNOWN = -2;
--    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads/paper";
--    private static final String REPOSITORY = "PaperMC/Paper";
+-    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads/folia"; // Folia
+-    private static final String REPOSITORY = "PaperMC/Folia"; // Folia
 +    private static final String DOWNLOAD_PAGE = "https://scissors.gg"; // Scissors
-+    private static final String REPOSITORY = "ScissorsMC/Scissors"; // Scissors
++    private static final String REPOSITORY = "ScissorsMC/Scissors-Folia"; // Scissors
      private static final ServerBuildInfo BUILD_INFO = ServerBuildInfo.buildInfo();
 -    private static final String USER_AGENT = BUILD_INFO.brandName() + "/" + BUILD_INFO.asString(VERSION_SIMPLE) + " (https://papermc.io)";
-+    private static final String USER_AGENT = BUILD_INFO.brandName() + "/" + BUILD_INFO.asString(VERSION_SIMPLE) + " (https://github.com/ScissorsMC/Scissors)"; // Scissors
++    private static final String USER_AGENT = BUILD_INFO.brandName() + "/" + BUILD_INFO.asString(VERSION_SIMPLE) + " (https://github.com/ScissorsMC/Scissors-Folia)"; // Scissors
      private static final Gson GSON = new Gson();
  
      @Override
@@ -26,30 +26,30 @@
          return history != null ? Component.textOfChildren(updateMessage, Component.newline(), history) : updateMessage;
      }
  
-+    // Scissors start - resolve the upstream Paper commit to a Paper build number
-+    private static @Nullable String paperRef() {
++    // Scissors start - resolve the upstream Folia commit to a Folia build number
++    private static @Nullable String foliaRef() {
 +        final java.util.jar.@Nullable Manifest manifest = io.papermc.paper.util.JarManifests.manifest(PaperVersionFetcher.class);
-+        return manifest == null ? null : manifest.getMainAttributes().getValue("Paper-Ref");
++        return manifest == null ? null : manifest.getMainAttributes().getValue("Folia-Ref");
 +    }
 +
-+    public static @Nullable Component getPaperReferenceMessage() {
-+        final @Nullable String ref = paperRef();
++    public static @Nullable Component getFoliaReferenceMessage() {
++        final @Nullable String ref = foliaRef();
 +        if (ref == null || ref.isBlank()) {
 +            return null;
 +        }
 +        final String shortRef = ref.substring(0, Math.min(7, ref.length()));
-+        final OptionalInt paperBuild = fetchPaperBuildForCommit(ref);
-+        final String label = paperBuild.isPresent()
-+            ? "based on Paper build " + paperBuild.getAsInt()
-+            : "based on Paper commit " + shortRef;
++        final OptionalInt foliaBuild = fetchFoliaBuildForCommit(ref);
++        final String label = foliaBuild.isPresent()
++            ? "based on Folia build " + foliaBuild.getAsInt()
++            : "based on Folia commit " + shortRef;
 +        return text(label, NamedTextColor.WHITE)
-+            .hoverEvent(text("Click to view the Paper commit", NamedTextColor.WHITE))
-+            .clickEvent(ClickEvent.openUrl("https://github.com/PaperMC/Paper/commit/" + ref));
++            .hoverEvent(text("Click to view the Folia commit", NamedTextColor.WHITE))
++            .clickEvent(ClickEvent.openUrl("https://github.com/PaperMC/Folia/commit/" + ref));
 +    }
 +
-+    private static OptionalInt fetchPaperBuildForCommit(final String commit) {
++    private static OptionalInt fetchFoliaBuildForCommit(final String commit) {
 +        try {
-+            final URL buildsUrl = URI.create("https://fill.papermc.io/v3/projects/paper/versions/" + PaperVersionFetcher.BUILD_INFO.minecraftVersionId() + "/builds").toURL();
++            final URL buildsUrl = URI.create("https://fill.papermc.io/v3/projects/folia/versions/" + PaperVersionFetcher.BUILD_INFO.minecraftVersionId() + "/builds").toURL();
 +            final HttpURLConnection connection = (HttpURLConnection) buildsUrl.openConnection();
 +            connection.setConnectTimeout(5000);
 +            connection.setReadTimeout(5000);
@@ -66,10 +66,10 @@
 +                    }
 +                }
 +            } catch (final JsonSyntaxException ex) {
-+                LOGGER.warn("Error parsing json from Paper's downloads API", ex);
++                LOGGER.warn("Error parsing json from Folia's downloads API", ex);
 +            }
 +        } catch (final IOException e) {
-+            LOGGER.warn("Error while resolving the upstream Paper build", e);
++            LOGGER.warn("Error while resolving the upstream Folia build", e);
 +        }
 +        return OptionalInt.empty();
 +    }
@@ -82,8 +82,8 @@
          final String currentVersion = PaperVersionFetcher.BUILD_INFO.minecraftVersionId();
  
          try {
--            final URL versionsUrl = URI.create("https://fill.papermc.io/v3/projects/paper").toURL();
-+            final URL versionsUrl = URI.create("https://fill.scissors.gg/v3/projects/scissors").toURL(); // Scissors
+-            final URL versionsUrl = URI.create("https://fill.papermc.io/v3/projects/folia").toURL(); // Folia
++            final URL versionsUrl = URI.create("https://fill.scissors.gg/v3/projects/scissors-folia").toURL(); // Scissors
              final HttpURLConnection connection = (HttpURLConnection) versionsUrl.openConnection();
              connection.setConnectTimeout(5000);
              connection.setReadTimeout(5000);
@@ -91,8 +91,8 @@
                      }
  
                      try {
--                        final URL buildsUrl = URI.create("https://fill.papermc.io/v3/projects/paper/versions/" + latestVersion + "/builds/latest").toURL();
-+                        final URL buildsUrl = URI.create("https://fill.scissors.gg/v3/projects/scissors/versions/" + latestVersion + "/builds/latest").toURL(); // Scissors
+-                        final URL buildsUrl = URI.create("https://fill.papermc.io/v3/projects/folia/versions/" + latestVersion + "/builds/latest").toURL(); // Folia
++                        final URL buildsUrl = URI.create("https://fill.scissors.gg/v3/projects/scissors-folia/versions/" + latestVersion + "/builds/latest").toURL(); // Scissors
                          final HttpURLConnection connection2 = (HttpURLConnection) buildsUrl.openConnection();
                          connection2.setConnectTimeout(5000);
                          connection2.setReadTimeout(5000);
@@ -117,8 +117,8 @@
  
      private static int fetchDistanceFromSiteApi(final int jenkinsBuild) {
          try {
--            final URL buildsUrl = URI.create("https://fill.papermc.io/v3/projects/paper/versions/" + PaperVersionFetcher.BUILD_INFO.minecraftVersionId() + "/builds").toURL();
-+            final URL buildsUrl = URI.create("https://fill.scissors.gg/v3/projects/scissors/versions/" + PaperVersionFetcher.BUILD_INFO.minecraftVersionId() + "/builds").toURL(); // Scissors
+-            final URL buildsUrl = URI.create("https://fill.papermc.io/v3/projects/folia/versions/" + PaperVersionFetcher.BUILD_INFO.minecraftVersionId() + "/builds").toURL(); // Folia
++            final URL buildsUrl = URI.create("https://fill.scissors.gg/v3/projects/scissors-folia/versions/" + PaperVersionFetcher.BUILD_INFO.minecraftVersionId() + "/builds").toURL(); // Scissors
              final HttpURLConnection connection = (HttpURLConnection) buildsUrl.openConnection();
              connection.setConnectTimeout(5000);
              connection.setReadTimeout(5000);
