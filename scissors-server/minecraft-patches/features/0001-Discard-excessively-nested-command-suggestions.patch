@@ -6,26 +6,26 @@ Subject: [PATCH] Discard excessively nested command suggestions
 Reject recursive command input before it enters the async suggestion queue, and make the authoritative SNBT depth guard report invalid syntax instead of leaking a runtime exception. This prevents completion floods from spamming errors or exhausting the parser stack.
 
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 2bdf7efb7b8814616929c30bcf0872a68caf978d..5372d92f893ab495234091c978794967f9dd8d96 100644
+index e2530719b91627a75e600638ba099c094e2e90e4..41a8944a31c9bd127b59fae22cdfcdfeb4777af8 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -268,6 +268,7 @@ public class ServerGamePacketListenerImpl
-     private static final Component CHAT_VALIDATION_FAILED = Component.translatable("multiplayer.disconnect.chat_validation_failed");
+@@ -269,6 +269,7 @@ public class ServerGamePacketListenerImpl
      private static final Component INVALID_COMMAND_SIGNATURE = Component.translatable("chat.disabled.invalid_command_signature").withStyle(ChatFormatting.RED);
      private static final int MAX_COMMAND_SUGGESTIONS = 1000;
+     private static final long UNSAFE_CREATIVE_ITEM_LOG_INTERVAL = TimeUnit.SECONDS.toMillis(1L); // Scissors - rate-limit exploit logging
 +    private static final long NESTED_COMMAND_SUGGESTION_LOG_INTERVAL = TimeUnit.SECONDS.toMillis(1L); // Scissors - rate-limit exploit logging
      public ServerPlayer player;
      public final PlayerChunkSender chunkSender;
      private int tickCount;
-@@ -277,6 +278,7 @@ public class ServerGamePacketListenerImpl
-     private final TickThrottler commandSpamThrottler;
+@@ -279,6 +280,7 @@ public class ServerGamePacketListenerImpl
      private final TickThrottler tabSpamThrottler = new TickThrottler(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamIncrement, io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamLimit); // Paper - configurable tab spam limits
      private final TickThrottler recipeSpamPackets = new TickThrottler(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamIncrement, io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamLimit);
+     private long lastUnsafeCreativeItemWarning; // Scissors - rate-limit exploit logging
 +    private long lastNestedCommandSuggestionWarning; // Scissors - rate-limit exploit logging
      private double firstGoodX;
      private double firstGoodY;
      private double firstGoodZ;
-@@ -889,6 +891,20 @@ public class ServerGamePacketListenerImpl
+@@ -891,6 +893,20 @@ public class ServerGamePacketListenerImpl
      @Override
      public void handleCustomCommandSuggestions(final ServerboundCommandSuggestionPacket packet) {
          // PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level()); // Paper - AsyncTabCompleteEvent; run this async

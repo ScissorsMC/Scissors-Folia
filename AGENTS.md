@@ -43,6 +43,27 @@ component, a different code path that reaches the same sink. That is not a hypot
 - Match the mindset of the attacker, not the reporter: the reporter shows you one way in; the attacker will try all of
   them.
 
+### Prove the sanitized remainder is safe
+
+Removing the most obvious field is insufficient when the remaining object can still drive the same sink. Before
+calling an exploit fixed:
+
+- Trace the exact version's consumer through the client or server sink. Do not treat a suggestive flag, registry
+  property, validation result, or method name as a safety contract until the call order proves it; a limiter applied
+  after allocation or provider construction does not bound that work.
+- Quantify every independent workload multiplier: cost per operation, operations per tick, radius/area or recursive
+  fan-out, lifetime, creation rate, and the number of simultaneously active objects. Bound the combined workload, not
+  only one multiplier.
+- Run the original payload after sanitation and inspect the resulting object. If it is still huge, permanent,
+  repeatable without cooldown, deeply nested, or otherwise able to reach the same resource budget, the patch is not
+  complete.
+- Test alternate implementations and parameterized variants, including values that are valid according to the codec.
+  Prefer a small allowlist of audited behavior when a registry can grow or its entries have unrelated client costs.
+- Check amplification through repetition. A safe-looking per-object cap can still fail when the original ingress can
+  cheaply create hundreds of those objects; eliminate or rate-bound that ingress as well.
+- Derive compatibility limits from the largest behavior vanilla actually creates in this version, then document any
+  deliberate restriction to commands, plugins, APIs, or stored data.
+
 ## Version-scoped learnings
 
 Before revisiting an exploit or subsystem, read `learnings/README.md` and the directory matching the exact `mcVersion`.
@@ -65,6 +86,24 @@ attribution text.
 
 The Folia commit is pinned by `foliaRef` in `gradle.properties`. That Folia commit determines the Paper commit beneath
 it. Do not change either relationship unless the task is specifically an upstream update.
+
+### Authoritative upstream source references
+
+Use public source before reverse-engineering or decompiling build tooling:
+
+- [Folia](https://github.com/PaperMC/Folia) is Scissors Folia's direct upstream. Resolve update behavior against the
+  exact `foliaRef`, preferably through paperweight's local Folia checkout.
+- [Paper](https://github.com/PaperMC/Paper) is Folia's upstream. Use the exact `paperRef` pinned by the selected Folia
+  commit when investigating Paper-owned code; do not substitute Paper's current branch or Scissors' Paper pin.
+- [paperweight](https://github.com/PaperMC/paperweight) is the authoritative source for patcher/core Gradle plugins,
+  task behavior, and DSL types. Check a locally cached matching sources JAR or the source revision for the configured
+  plugin version before inspecting bytecode.
+- [paperweight-examples](https://github.com/PaperMC/paperweight-examples) provides official fork examples, but it is
+  frequently behind current Paper, Folia, and paperweight behavior. Treat it as a lead and revalidate every task name
+  and pattern against this repository's pinned versions.
+
+When source is already available in a checkout, a `-sources.jar`, or one of these official repositories, do not
+decompile the corresponding class or infer its behavior from an unrelated fork version.
 
 ## Updating Folia
 
@@ -229,6 +268,11 @@ Run the commands as separate invocations and stop on the first failure. On Windo
 
 Before reapplying patches, ensure all intended nested-worktree changes have either been folded into file patches or
 committed as feature patches. Reapplying can replace generated worktrees.
+
+Regeneration can mechanically change patch hunk line numbers and `index` hashes when an earlier patch shifts the
+applied source. If a tracked patch differs only in those line numbers or hashes, ignore that diff. Do not rewrite,
+restore, unstage, or otherwise chase it merely to make the working tree show only semantic changes; leave the
+regenerated metadata as-is.
 
 ## Patch quality
 

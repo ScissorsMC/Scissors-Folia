@@ -46,27 +46,27 @@ index 20c1ebd9514b0e2b0e8014d052c9d760c5daaf28..b3f5496f0470e544e659fe1d43785e62
          return this.command;
      }
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 5372d92f893ab495234091c978794967f9dd8d96..a7459625f148640f42418fff5907d16c481b3648 100644
+index 41a8944a31c9bd127b59fae22cdfcdfeb4777af8..670fd5d078b753d0f0880e8d252a5d4a9196a7b1 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -269,6 +269,8 @@ public class ServerGamePacketListenerImpl
-     private static final Component INVALID_COMMAND_SIGNATURE = Component.translatable("chat.disabled.invalid_command_signature").withStyle(ChatFormatting.RED);
+@@ -270,6 +270,8 @@ public class ServerGamePacketListenerImpl
      private static final int MAX_COMMAND_SUGGESTIONS = 1000;
+     private static final long UNSAFE_CREATIVE_ITEM_LOG_INTERVAL = TimeUnit.SECONDS.toMillis(1L); // Scissors - rate-limit exploit logging
      private static final long NESTED_COMMAND_SUGGESTION_LOG_INTERVAL = TimeUnit.SECONDS.toMillis(1L); // Scissors - rate-limit exploit logging
 +    private static final double MAX_PRIVILEGED_PACKET_DISTANCE_SQUARED = 32.0 * 32.0; // Scissors - remote editor/query packets
 +    private static final long INVALID_PRIVILEGED_PACKET_LOG_INTERVAL = TimeUnit.SECONDS.toMillis(1L); // Scissors - rate-limit exploit logging
      public ServerPlayer player;
      public final PlayerChunkSender chunkSender;
      private int tickCount;
-@@ -279,6 +281,7 @@ public class ServerGamePacketListenerImpl
-     private final TickThrottler tabSpamThrottler = new TickThrottler(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamIncrement, io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamLimit); // Paper - configurable tab spam limits
+@@ -281,6 +283,7 @@ public class ServerGamePacketListenerImpl
      private final TickThrottler recipeSpamPackets = new TickThrottler(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamIncrement, io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.recipeSpamLimit);
+     private long lastUnsafeCreativeItemWarning; // Scissors - rate-limit exploit logging
      private long lastNestedCommandSuggestionWarning; // Scissors - rate-limit exploit logging
 +    private long lastInvalidPrivilegedPacketWarning; // Scissors - rate-limit exploit logging
      private double firstGoodX;
      private double firstGoodY;
      private double firstGoodZ;
-@@ -1005,9 +1008,12 @@ public class ServerGamePacketListenerImpl
+@@ -1007,9 +1010,12 @@ public class ServerGamePacketListenerImpl
          if (!this.player.canUseGameMasterBlocks() && (!this.player.isCreative() || !this.player.getBukkitEntity().hasPermission("minecraft.commandblock"))) { // Paper - command block permission
              this.player.sendSystemMessage(Component.translatable("advMode.notAllowed"));
          } else {
@@ -80,7 +80,7 @@ index 5372d92f893ab495234091c978794967f9dd8d96..a7459625f148640f42418fff5907d16c
              BlockEntity blockEntity = this.player.level().getBlockEntity(blockPos);
              if (blockEntity instanceof CommandBlockEntity commandBlockEntity) {
                  autoCommandBlock = commandBlockEntity;
-@@ -1066,7 +1072,12 @@ public class ServerGamePacketListenerImpl
+@@ -1068,7 +1074,12 @@ public class ServerGamePacketListenerImpl
          if (!this.player.canUseGameMasterBlocks() && (!this.player.isCreative() || !this.player.getBukkitEntity().hasPermission("minecraft.commandblock"))) { // Paper - command block permission
              this.player.sendSystemMessage(Component.translatable("advMode.notAllowed"));
          } else {
@@ -94,7 +94,7 @@ index 5372d92f893ab495234091c978794967f9dd8d96..a7459625f148640f42418fff5907d16c
              if (commandBlock != null) {
                  String command = packet.getCommand();
                  commandBlock.setCommand(command);
-@@ -1237,6 +1248,9 @@ public class ServerGamePacketListenerImpl
+@@ -1239,6 +1250,9 @@ public class ServerGamePacketListenerImpl
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
          if (this.player.canUseGameMasterBlocks()) {
              BlockPos blockPos = packet.getPos();
@@ -104,7 +104,7 @@ index 5372d92f893ab495234091c978794967f9dd8d96..a7459625f148640f42418fff5907d16c
              BlockState state = this.player.level().getBlockState(blockPos);
              if (this.player.level().getBlockEntity(blockPos) instanceof StructureBlockEntity structure) {
                  structure.setMode(packet.getMode());
-@@ -1290,6 +1304,9 @@ public class ServerGamePacketListenerImpl
+@@ -1292,6 +1306,9 @@ public class ServerGamePacketListenerImpl
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
          if (this.player.canUseGameMasterBlocks()) {
              BlockPos blockPos = packet.position();
@@ -114,7 +114,7 @@ index 5372d92f893ab495234091c978794967f9dd8d96..a7459625f148640f42418fff5907d16c
              BlockState initialState = this.player.level().getBlockState(blockPos);
              if (this.player.level().getBlockEntity(blockPos) instanceof TestBlockEntity testBlock) {
                  testBlock.setMode(packet.mode());
-@@ -1304,10 +1321,25 @@ public class ServerGamePacketListenerImpl
+@@ -1306,10 +1323,25 @@ public class ServerGamePacketListenerImpl
      public void handleTestInstanceBlockAction(final ServerboundTestInstanceBlockActionPacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
          BlockPos pos = packet.pos();
@@ -142,7 +142,7 @@ index 5372d92f893ab495234091c978794967f9dd8d96..a7459625f148640f42418fff5907d16c
                  if (packet.action() == ServerboundTestInstanceBlockActionPacket.Action.RESET) {
                      blockEntity.resetTest(this.player::sendSystemMessage);
                  } else if (packet.action() == ServerboundTestInstanceBlockActionPacket.Action.SAVE) {
-@@ -1349,6 +1381,9 @@ public class ServerGamePacketListenerImpl
+@@ -1351,6 +1383,9 @@ public class ServerGamePacketListenerImpl
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
          if (this.player.canUseGameMasterBlocks()) {
              BlockPos blockPos = packet.getPos();
@@ -152,7 +152,7 @@ index 5372d92f893ab495234091c978794967f9dd8d96..a7459625f148640f42418fff5907d16c
              BlockState state = this.player.level().getBlockState(blockPos);
              if (this.player.level().getBlockEntity(blockPos) instanceof JigsawBlockEntity jigsaw) {
                  jigsaw.setName(packet.getName());
-@@ -1369,6 +1404,13 @@ public class ServerGamePacketListenerImpl
+@@ -1371,6 +1406,13 @@ public class ServerGamePacketListenerImpl
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
          if (this.player.canUseGameMasterBlocks()) {
              BlockPos blockPos = packet.getPos();
@@ -166,7 +166,7 @@ index 5372d92f893ab495234091c978794967f9dd8d96..a7459625f148640f42418fff5907d16c
              if (this.player.level().getBlockEntity(blockPos) instanceof JigsawBlockEntity jigsaw) {
                  jigsaw.generate(this.player.level(), packet.levels(), packet.keepJigsaws());
              }
-@@ -1498,7 +1540,7 @@ public class ServerGamePacketListenerImpl
+@@ -1500,7 +1542,7 @@ public class ServerGamePacketListenerImpl
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
          if (this.player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)) {
              Entity entity = this.player.level().getEntity(packet.getEntityId());
@@ -175,7 +175,7 @@ index 5372d92f893ab495234091c978794967f9dd8d96..a7459625f148640f42418fff5907d16c
                  try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(entity.problemPath(), LOGGER)) {
                      TagValueOutput output = TagValueOutput.createWithContext(reporter, entity.registryAccess());
                      entity.saveWithoutId(output);
-@@ -1522,13 +1564,48 @@ public class ServerGamePacketListenerImpl
+@@ -1524,13 +1566,48 @@ public class ServerGamePacketListenerImpl
      @Override
      public void handleBlockEntityTagQuery(final ServerboundBlockEntityTagQueryPacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
