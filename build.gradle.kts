@@ -28,11 +28,10 @@ paperweight {
             patchesDir = file("scissors-api/paper-patches")
             outputDir = file("paper-api")
         }
-        patchDir("foliaCheckstyle") {
-            upstreamPath = "folia-checkstyle"
-            excludes = setOf("build.gradle.kts.patch")
-            patchesDir = file("scissors-api/folia-checkstyle-patches")
-            outputDir = file("folia-checkstyle")
+        patchFile {
+            path = "folia-checkstyle/build.gradle.kts"
+            outputFile = file("folia-checkstyle/build.gradle.kts")
+            patchFile = file("folia-checkstyle/build.gradle.kts.patch")
         }
         patchRepo("paperCheckstyle") {
             upstreamPath = "paper-checkstyle"
