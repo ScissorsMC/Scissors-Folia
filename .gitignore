@@ -12,6 +12,9 @@ build
 /scissors-api/build.gradle.kts
 /paper-api
 /paper-api-generator
+/folia-checkstyle
+/paper-checkstyle
+/.checkstyle
 
 .idea/
 

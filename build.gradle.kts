@@ -28,7 +28,29 @@ paperweight {
             patchesDir = file("scissors-api/paper-patches")
             outputDir = file("paper-api")
         }
+        patchDir("foliaCheckstyle") {
+            upstreamPath = "folia-checkstyle"
+            excludes = setOf("build.gradle.kts.patch")
+            patchesDir = file("scissors-api/folia-checkstyle-patches")
+            outputDir = file("folia-checkstyle")
+        }
+        patchRepo("paperCheckstyle") {
+            upstreamPath = "paper-checkstyle"
+            patchesDir = file("scissors-api/paper-checkstyle-patches")
+            outputDir = file("paper-checkstyle")
+        }
+        patchRepo("paperCheckstyleConfig") {
+            upstreamPath = ".checkstyle"
+            patchesDir = file("scissors-api/paper-checkstyle-config-patches")
+            outputDir = file(".checkstyle")
+        }
     }
+}
+
+// Keep build output out of the generated upstream patch worktree so rebuilding its empty patch set never scans class
+// files or test results as candidate source changes.
+project(":folia-checkstyle") {
+    layout.buildDirectory = rootProject.layout.buildDirectory.dir("folia-checkstyle")
 }
 
 subprojects {
