@@ -6,7 +6,7 @@ Subject: [PATCH] Discard excessively nested command suggestions
 Reject recursive command input before it enters the async suggestion queue, and make the authoritative SNBT depth guard report invalid syntax instead of leaking a runtime exception. This prevents completion floods from spamming errors or exhausting the parser stack.
 
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index e2530719b91627a75e600638ba099c094e2e90e4..41a8944a31c9bd127b59fae22cdfcdfeb4777af8 100644
+index 7697ff9f24a2152d82ee4cad7bd4996e546286b6..bd5bb6105aa45cec95e90e692e3bf01ddbb22226 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -269,6 +269,7 @@ public class ServerGamePacketListenerImpl

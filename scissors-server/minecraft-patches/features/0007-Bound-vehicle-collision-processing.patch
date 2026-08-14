@@ -117,7 +117,7 @@ index 3fcd534cee1f605a710ffc43eff4b5106c7dd40c..42625241c06e0713f634e99e7791e15e
              boolean addNewPassengers = !this.level().isClientSide() && !(this.getControllingPassenger() instanceof Player);
  
 diff --git a/net/minecraft/world/entity/vehicle/minecart/AbstractMinecart.java b/net/minecraft/world/entity/vehicle/minecart/AbstractMinecart.java
-index 5ad77636d0681d1f0341cff4482ba6ad52f3583b..d63739ecab7ca4c2ec75494d1530783b61c20255 100644
+index 30b99d9d0944399e6f3a74c4310cbf8f15cc5adc..d462b784ee38a6187a8da7407f047ca5d2b08e0d 100644
 --- a/net/minecraft/world/entity/vehicle/minecart/AbstractMinecart.java
 +++ b/net/minecraft/world/entity/vehicle/minecart/AbstractMinecart.java
 @@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;

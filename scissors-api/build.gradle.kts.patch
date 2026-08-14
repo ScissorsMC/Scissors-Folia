@@ -1,6 +1,7 @@
 --- a/folia-api/build.gradle.kts
 +++ b/folia-api/build.gradle.kts
-@@ -1,5 +_,6 @@
+@@ -1,6 +_,7 @@
+ import io.papermc.paperweight.checkstyle.JavadocTag
  import paper.libs.com.google.gson.Gson
  
 +// Scissors-Folia - Scissors API layered on Folia
