@@ -2,8 +2,10 @@
 
 - Recorded: 2026-08-07
 - Applies to: Minecraft 26.2
+- Scissors Paper: `a40947c0acc780cebf578c6ab0f38b6948c3f86e`
+- Scissors revalidated after updating Paper to: `f5706462f8833a858fee5fe1bccc05b60c248922`
 - Folia: `e48800d446d2bdeb24a8d31d671554440687e846`
-- Embedded Paper: `5563e58283f7771bd5ace9baad8b68614e37ad16`
+- Folia's embedded Paper: `5563e58283f7771bd5ace9baad8b68614e37ad16`
 - Revalidate after changing any version above
 
 ## Crash mechanism
@@ -41,7 +43,7 @@ visual change is evidence, not proof, that the resource-exhaustion class is clos
   expiration arithmetic uses `long`, duration-on-use cannot extend past the cap, and direct data-watcher writes are
   rechecked. This covers commands, entity/world loading, Bukkit/NMS setters, growth, and direct metadata mutation.
 - `ItemStack.sanitizeUnsafeData` restores an area-effect-cloud-overridden spawn egg to the egg's registered entity type.
-  This prevents a no-cooldown egg from creating a swarm of individually bounded clouds; the reported elder-guardian egg
+  This prevents a no-cooldown egg from creating a swarm of individually bounded clouds; the supplied elder-guardian egg
   now spawns an elder guardian. Other area-effect-cloud entity data has unsafe/malformed particles removed and its
   radius, duration, age, and wait time normalized.
 - Nested bundle, container, and charged-projectile items are recursively sanitized. Storage decode, creative ingress,
@@ -56,5 +58,5 @@ visual change is evidence, not proof, that the resource-exhaustion class is clos
    duration, age, and wait bounds, malformed fields, and the exact reported egg shape.
 2. It covers bundle, container, charged-projectile, and multi-level nested sanitation and verifies valid canonical
    dragon-breath data remains unchanged.
-3. Manual: load an equivalent saved-toolbar egg. The server must warn that it restored the mismatched egg, immediately
-   correct the creative slot, and using it must spawn an elder guardian rather than an area-effect cloud.
+3. Manual: load the supplied toolbar egg. The server must warn that it restored the mismatched egg, immediately correct
+   the creative slot, and using it must spawn an elder guardian rather than an area-effect cloud.
