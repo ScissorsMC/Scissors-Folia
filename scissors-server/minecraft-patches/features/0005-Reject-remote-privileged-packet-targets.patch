@@ -46,7 +46,7 @@ index 20c1ebd9514b0e2b0e8014d052c9d760c5daaf28..b3f5496f0470e544e659fe1d43785e62
          return this.command;
      }
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 13f6a1a510323cbb2684bf0f0655ebf5a177c2a5..fa66be58fb290431df5c38b1cdf1c76601b67c41 100644
+index d3a94ff324e962408477e265b65f18e347a47c35..777beb096333a31f1baa941ed0b734af7ef1db9f 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -273,6 +273,8 @@ public class ServerGamePacketListenerImpl

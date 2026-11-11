@@ -402,7 +402,7 @@ index 99668e7ac52fa079d7a475ff3fc3b63c566b2d63..8202975a9668e137b2825bf7510b3221
  
      public static DataComponentPatch.Builder builder() {
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index fa66be58fb290431df5c38b1cdf1c76601b67c41..c7d27a1098fb873297dd32790c70e4ac4e3aac00 100644
+index 777beb096333a31f1baa941ed0b734af7ef1db9f..3530469d3a5258fcf99d979bc3bfafc425eb7d26 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -3739,7 +3739,7 @@ public class ServerGamePacketListenerImpl
